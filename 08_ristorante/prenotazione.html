@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+        .montserrat {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+        }
+    </style>
+</head>
+
+<body class="montserrat" data-bs-theme="dark">
+
+    <h1 class="text-center mt-4">Prenotazione</h1>
+
+    <form class="w-50 m-auto mt-4" action="gestioneprenotazione.php" method="post">
+        <!-- nome -->
+        <div class="mb-3">
+            <label for="inputName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputName" name="name">
+        </div>
+        <!-- cognome -->
+        <div class="mb-3">
+            <label for="inputSurname" class="form-label">Surname</label>
+            <input type="text" class="form-control" id="inputSurname" name="surname">
+        </div>
+        <!-- Numero del tavolo (1-5) -->
+        <div class="mb-3">
+            <label for="inputTableNum" class="form-label">Numero del tavolo</label>
+            <select class="form-select" id="inputTableNum" name="tableNum">
+                <option selected value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+
+        <!-- Orario -->
+        <div class="mb-3">
+            <label for="inputTime" class="form-label">Time</label>
+            <input type="time" class="form-control" id="inputTime" name="time">
+        </div>
+
+        <!-- Note -->
+        <div class="mb-3">
+            <label for="inputNote" class="form-label">Textarea</label>
+            <textarea class="form-control" id="inputNote" name="note"></textarea>
+        </div>
+
+        <!-- Checkbox per Portate -->
+        <div class="mb-3">
+            <label class="form-label">Courses of the Meal</label>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="courseAppetizer" name="courses" value="appetizer">
+                <label class="form-check-label" for="courseAppetizer">Appetizer</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="courseFirst" name="courses" value="first">
+                <label class="form-check-label" for="courseFirst">First</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="courseSecond" name="courses" value="second">
+                <label class="form-check-label" for="courseSecond">Second</label>
+            </div>
+        </div>
+
+        <!-- Radio button per Parking -->
+        <div class="mb-3">
+            <label class="form-label">Type of Parking</label>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="parkingControlled" name="parking" value="controlled">
+                <label class="form-check-label" for="parkingControlled">Controlled Parking</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="parkingUncontrolled" name="parking"
+                    value="uncontrolled">
+                <label class="form-check-label" for="parkingUncontrolled">Uncontrolled Parking</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="noParking" name="parking" value="noParking">
+                <label class="form-check-label" for="noParking">No Parking</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-outline-light">Submit</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

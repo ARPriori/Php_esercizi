@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    .montserrat {
+      font-family: "Montserrat", sans-serif;
+      font-optical-sizing: auto;
+    }
+  </style>
+</head>
+
+<body class=" montserrat" data-bs-theme="dark">
+  <form class="w-50 m-auto mt-4" action="riepilogo.php" method="get">
+    <!-- nome -->
+    <div class="mb-3">
+      <label for="inputName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="inputName" name="name">
+    </div>
+    <!-- cognome -->
+    <div class="mb-3">
+      <label for="inputSurname" class="form-label">Surname</label>
+      <input type="text" class="form-control" id="inputSurname" name="surname">
+    </div>
+    <!-- indirizzo email -->
+    <div class="mb-3">
+      <label for="inputEmail" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="inputEmail" name="email" aria-describedby="emailHelp">
+    </div>
+
+    <button type="submit" class="btn btn-outline-light">Submit</button>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
