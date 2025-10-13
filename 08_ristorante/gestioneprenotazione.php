@@ -45,6 +45,7 @@
     $haFirst = in_array("first", $courses);
     $haSecond = in_array("second", $courses);
 
+    //Controllo errori
     $errore = false;
     $messaggioErrore = "";
 
@@ -54,43 +55,110 @@
     } elseif ($haAppetizer && !$haFirst && !$haSecond) {
         $errore = true;
         $messaggioErrore = "Non è possibile ordinare solo l'antipasto.";
+    } elseif (empty($orario)) {
+        $errore = true;
+        $messaggioErrore = "Errore: l'orario non è stato selezionato.";
+    } elseif (empty($nome) && empty($cognome)) {
+        $errore = true;
+        $messaggioErrore = "Errore: devi inserire almeno il nome o il cognome.";
     }
 
+
     //Calcolo il prezzo totale delle portate selezionate
+    $partialPrice = 0;
     foreach ($courses as $course) {
-        if (isset($prezzi[$course])) {
-            $totalPrice += $prices[$course];
+        if (isset($prices[$course])) {
+            $partialPrice += $prices[$course];
         }
     }
 
     // Calcolo sconti
-    $sconto = 0;
+    $discount = 0;
     if ($haFirst && $haSecond && !$haAppetizer) {
-        $sconto = 0.10;
+        $discount = 0.10;
     } elseif ($haAppetizer && $haFirst && $haSecond) {
-        $sconto = 0.15;
+        $discount = 0.15;
     }
 
-    $prezzoScontato = $prezzoParziale - ($prezzoParziale * $sconto);
+    $dicountedPrice = $partialPrice - ($partialPrice * $discount);
 
     // Prezzo parcheggio
-    $prezzoParcheggio = 0;
+    $parkingPrice = 0;
     switch ($parking) {
         case "uncontrolled":
-            $prezzoParcheggio = 3;
+            $parkingPrice = 3;
             break;
         case "controlled":
-            $prezzoParcheggio = 5;
+            $parkingPrice = 5;
             break;
         default:
-            $prezzoParcheggio = 0;
+            $parkingPrice = 0;
             break;
     }
 
     // Prezzo totale
-    $prezzoTotale = $prezzoScontato + $prezzoParcheggio;
+    $totalPrice = $dicountedPrice + $parkingPrice;
 
     ?>
+
+    <div class="container mt-5">
+        <?php if ($errore): ?>
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Errore nella prenotazione</h4>
+                <p><?= $messaggioErrore ?></p>
+                <hr>
+                <p class="mb-0">Data e ora della prenotazione: <strong><?= $dataPrenotazione ?></strong></p>
+                <a href="prenotazione.html" class="btn btn-warning mt-3">Torna alla prenotazione</a>
+            </div>
+        <?php else: ?>
+            <h2 class="mb-4">Riepilogo Prenotazione</h2>
+            <table class="table table-bordered table-dark">
+                <tbody>
+                    <tr>
+                        <th scope="row">Nome</th>
+                        <td><?= htmlspecialchars($nome) ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cognome</th>
+                        <td><?= htmlspecialchars($cognome) ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Tavolo</th>
+                        <td><?= htmlspecialchars($tavolo) ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Orario</th>
+                        <td><?= htmlspecialchars($orario) ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cameriere Assegnato</th>
+                        <td><?= $assignedWaiter ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Portate</th>
+                        <td><?= implode(", ", $courses) ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Note</th>
+                        <td><?= nl2br(htmlspecialchars($note)) ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Parcheggio</th>
+                        <td><?= $parking ?: 'Nessuno' ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prezzo Totale</th>
+                        <td>€ <?= number_format($totalPrice, 2, ',', '.') ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Data e Ora Prenotazione</th>
+                        <td><?= $dataPrenotazione ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
