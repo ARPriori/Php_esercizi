@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Inizializza i dati della sessione se non esistono
+// Inizializza la sessione se vuota
 if (!isset($_SESSION['form_anagrafici'])) {
     $_SESSION['form_anagrafici'] = [
         'nome' => '',
@@ -14,6 +14,7 @@ if (!isset($_SESSION['form_anagrafici'])) {
     ];
 }
 
+// Salva i dati ad ogni POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($_POST as $key => $value) {
         if (isset($_SESSION['form_anagrafici'][$key])) {
@@ -21,164 +22,152 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// step corrente dopo submit
+$current_step = isset($_POST['current_step']) ? (int) $_POST['current_step'] : 1;
 ?>
 <!DOCTYPE html>
 <html lang="eng">
+
 <head>
-<meta charset="UTF-8">
-<title>Wizard Anagrafici</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    .step { display: none; }
-    .step.active { display: block; }
-    .wizard-card {
-        max-width: 550px;
-        margin: auto;
-        margin-top: 50px;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>Wizard Anagrafici</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .wizard-card {
+            max-width: 550px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="container">
-    <div class="card wizard-card">
-        <div class="card-body">
-            <h4 class="card-title text-center mb-4">Registrazione - Dati Anagrafici</h4>
+    <div class="container">
+        <div class="card wizard-card">
+            <div class="card-body">
+                <h4 class="text-center mb-4">Registrazione - Dati Anagrafici</h4>
 
-            <!-- Progress bar -->
-            <div  class="progress my-3">
-                <div id="progressBar" class="progress-bar bg-warning" style="width: 14%"  role="progressbar" aria-label="Warning example" aria-valuenow="1" aria-valuemin="0" aria-valuemax="7"></div>
-            </div>
+                <div class="progress my-3">
+                    <div id="progressBar" class="progress-bar bg-warning" style="width: 14%"></div>
+                </div>
 
-            <form method="POST" id="wizardForm" action="step2.php">
+                <form method="POST" action="step1.php" id="wizardForm">
 
-                <!-- Step 1: Nome -->
-                <div class="step active" id="step1">
-                    <div class="mb-3">
+                    <input type="hidden" name="current_step" id="current_step" value="<?= $current_step ?>">
+
+                    <!-- Step 1 -->
+                    <div class="step" id="step1">
                         <label class="form-label">Nome</label>
                         <input type="text" name="nome" class="form-control"
-                               value="<?= htmlspecialchars($_SESSION['form_anagrafici']['nome']) ?>" required>
+                            value="<?= htmlspecialchars($_SESSION['form_anagrafici']['nome']) ?>" required>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="button" class="btn btn-warning" onclick="goToStep(2)">Avanti</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-warning" onclick="nextStep(2)">Avanti</button>
-                    </div>
-                </div>
 
-                <!-- Step 2: Cognome -->
-                <div class="step" id="step2">
-                    <div class="mb-3">
+                    <!-- Step 2 -->
+                    <div class="step" id="step2">
                         <label class="form-label">Cognome</label>
                         <input type="text" name="cognome" class="form-control"
-                               value="<?= htmlspecialchars($_SESSION['form_anagrafici']['cognome']) ?>" required>
+                            value="<?= htmlspecialchars($_SESSION['form_anagrafici']['cognome']) ?>" required>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">Indietro</button>
+                            <button type="button" class="btn btn-warning" onclick="goToStep(3)">Avanti</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Indietro</button>
-                        <button type="button" class="btn btn-warning" onclick="nextStep(3)">Avanti</button>
-                    </div>
-                </div>
 
-                <!-- Step 3: Data di nascita -->
-                <div class="step" id="step3">
-                    <div class="mb-3">
+                    <!-- Step 3 -->
+                    <div class="step" id="step3">
                         <label class="form-label">Data di nascita</label>
                         <input type="date" name="data_nascita" class="form-control"
-                               value="<?= htmlspecialchars($_SESSION['form_anagrafici']['data_nascita']) ?>" required>
+                            value="<?= htmlspecialchars($_SESSION['form_anagrafici']['data_nascita']) ?>" required>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(2)">Indietro</button>
+                            <button type="button" class="btn btn-warning" onclick="goToStep(4)">Avanti</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Indietro</button>
-                        <button type="button" class="btn btn-warning" onclick="nextStep(4)">Avanti</button>
-                    </div>
-                </div>
 
-                <!-- Step 4: Genere -->
-                <div class="step" id="step4">
-                    <div class="mb-3">
+                    <!-- Step 4 -->
+                    <div class="step" id="step4">
                         <label class="form-label">Genere</label>
                         <select name="genere" class="form-select" required>
                             <option value="">Seleziona...</option>
-                            <option value="Maschio" <?= $_SESSION['form_anagrafici']['genere']=='Maschio'?'selected':'' ?>>Maschio</option>
-                            <option value="Femmina" <?= $_SESSION['form_anagrafici']['genere']=='Femmina'?'selected':'' ?>>Femmina</option>
-                            <option value="Altro" <?= $_SESSION['form_anagrafici']['genere']=='Altro'?'selected':'' ?>>Altro</option>
+                            <option value="Maschio" <?= $_SESSION['form_anagrafici']['genere'] == 'Maschio' ? 'selected' : '' ?>>Maschio</option>
+                            <option value="Femmina" <?= $_SESSION['form_anagrafici']['genere'] == 'Femmina' ? 'selected' : '' ?>>Femmina</option>
+                            <option value="Altro" <?= $_SESSION['form_anagrafici']['genere'] == 'Altro' ? 'selected' : '' ?>>Altro</option>
                         </select>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(3)">Indietro</button>
+                            <button type="button" class="btn btn-warning" onclick="goToStep(5)">Avanti</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">Indietro</button>
-                        <button type="button" class="btn btn-warning" onclick="nextStep(5)">Avanti</button>
-                    </div>
-                </div>
 
-                <!-- Step 5: Codice Fiscale -->
-                <div class="step" id="step5">
-                    <div class="mb-3">
+                    <!-- Step 5 -->
+                    <div class="step" id="step5">
                         <label class="form-label">Codice Fiscale</label>
                         <input type="text" name="codice_fiscale" class="form-control"
-                               value="<?= htmlspecialchars($_SESSION['form_anagrafici']['codice_fiscale']) ?>">
+                            value="<?= htmlspecialchars($_SESSION['form_anagrafici']['codice_fiscale']) ?>">
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(4)">Indietro</button>
+                            <button type="button" class="btn btn-warning" onclick="goToStep(6)">Avanti</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(4)">Indietro</button>
-                        <button type="button" class="btn btn-warning" onclick="nextStep(6)">Avanti</button>
-                    </div>
-                </div>
 
-                <!-- Step 6: Nazionalità -->
-                <div class="step" id="step6">
-                    <div class="mb-3">
+                    <!-- Step 6 -->
+                    <div class="step" id="step6">
                         <label class="form-label">Nazionalità</label>
                         <input type="text" name="nazionalita" class="form-control"
-                               value="<?= htmlspecialchars($_SESSION['form_anagrafici']['nazionalita']) ?>">
+                            value="<?= htmlspecialchars($_SESSION['form_anagrafici']['nazionalita']) ?>">
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(5)">Indietro</button>
+                            <button type="button" class="btn btn-warning" onclick="goToStep(7)">Avanti</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(5)">Indietro</button>
-                        <button type="button" class="btn btn-warning" onclick="nextStep(7)">Avanti</button>
-                    </div>
-                </div>
 
-                <!-- Step 7: Luogo di nascita -->
-                <div class="step" id="step7">
-                    <div class="mb-3">
+                    <!-- Step 7 -->
+                    <div class="step" id="step7">
                         <label class="form-label">Luogo di nascita</label>
                         <input type="text" name="luogo_nascita" class="form-control"
-                               value="<?= htmlspecialchars($_SESSION['form_anagrafici']['luogo_nascita']) ?>">
+                            value="<?= htmlspecialchars($_SESSION['form_anagrafici']['luogo_nascita']) ?>">
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(6)">Indietro</button>
+                            <button type="submit" formaction="step2.php" class="btn btn-warning">Continua</button>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" onclick="prevStep(6)">Indietro</button>
-                        <button type="submit" class="btn btn-warning">Conferma</button>
-                    </div>
-                </div>
 
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    const totalSteps = 7;
-    const progressBar = document.getElementById("progressBar");
-
-    function showStep(step){
-        for(let i=1;i<=totalSteps;i++){
-            document.getElementById("step"+i).classList.remove("active");
+    <script>
+        function goToStep(step) {
+            document.getElementById('current_step').value = step;
+            document.getElementById('wizardForm').submit();
         }
-        document.getElementById("step"+step).classList.add("active");
 
-        let perc = (step/totalSteps) * 100;
-        progressBar.style.width = perc + "%";
-    }
+        showStep(<?= $current_step ?>);
 
-    function nextStep(step){
-        setTimeout(()=>{ showStep(step); },50);
-    }
+        function showStep(step) {
+            const total = 7;
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById("step" + step).classList.add('active');
+            document.getElementById("progressBar").style.width = (step / total) * 100 + "%";
+        }
+    </script>
 
-    function prevStep(step){
-        showStep(step);
-    }
-
-    showStep(1);
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
