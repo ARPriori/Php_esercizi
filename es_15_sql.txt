@@ -1,0 +1,63 @@
+CREATE DATABASE IF NOT EXISTS Centro_Ricerca;
+CREATE TABLE Persona(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    cod_fiscale CHAR(16) UNIQUE,
+    nome VARCHAR(255),
+    cognome VARCHAR(255),
+    data_nascita DATE
+);
+CREATE TABLE Uffico_Amministrazione(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255)
+);
+CREATE TABLE Personale_Amministrativo(
+    ID_persona INT NOT NULL PRIMARY KEY REFERENCES Persona(ID),
+    ID_supervisore INT REFERENCES Personale_amministrativo(ID_persona),
+    ID_ufficio INT REFERENCES Ufficio_Amministrazione(ID)
+);
+CREATE TABLE Grado_Accademico(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    grado VARCHAR(255)
+);
+CREATE TABLE Ricercatore(
+    ID_persona INT NOT NULL PRIMARY KEY REFERENCES Persona(ID),
+    ID_supervisore INT REFERENCES Ricercatore(ID_persona),
+    ID_grado VARCHAR(255) REFERENCES Grado_Accademico(ID)
+);
+CREATE TABLE Progetto(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ID_ricercatore_PI INT REFERENCES Ricercatore(ID_persona),
+    cod_progetto CHAR(16) UNIQUE,
+    titolo VARCHAR(100),
+    data_inizio DATE,
+    data_fine_prevista DATE
+);
+CREATE TABLE Pubblicazione(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ID_progetto INT REFERENCES Progetto(ID),
+    DOI_code VARCHAR(255) UNIQUE,
+    titolo VARCHAR(100),
+    anno_pubblicazione YEAR
+);
+CREATE TABLE Ente(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255)
+);
+CREATE TABLE Finanziamento(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    cod_finanziamento CHAR(16) UNIQUE,
+    ID_ente INT REFERENCES Ente(ID),
+    importo INT NOT NULL,
+    data_ricezione DATE NOT NULL
+);
+CREATE TABLE Ricercatore_Progetto(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ID_ricercatore INT NOT NULL REFERENCES Ricercatore(ID_persona),
+    ID_progetto INT NOT NULL REFERENCES Progetto(ID),
+    percentuale_impegno INT
+);
+CREATE TABLE Ricercatore_Pubblicazione(
+    ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ID_ricercatore INT NOT NULL REFERENCES Ricercatore(ID_persona),
+    ID_pubblicazione INT NOT NULL REFERENCES Pubblicazione(ID)
+);
