@@ -1,0 +1,38 @@
+1) Elenco Completo dei Ristoranti:
+SELECT nome, via AS INDIRIZZO FROM `ristorante` WHERE 1;
+
+2) ​Dipendenti con Salario Alto:
+SELECT nome, cognome FROM personale WHERE salario > 30000;
+
+3) ​Piatti Economici:
+SELECT nome, prezzo_vendita FROM piatto WHERE prezzo_vendita < 10.00;
+
+4) ​Ingredienti in Kilogrammi (JOIN implicita o esplicita):
+SELECT nome, costo_unitario FROM ingrediente WHERE unita_misura = 'kg';
+
+5) ​Personale assunto dopo una certa data (WHERE con data):
+SELECT nome, cognome, data_assunzione FROM personale WHERE data_assunzione > '2020-01-01';
+
+6) ​Ingredienti utilizzati in un Piatto Specifico (JOIN tra tre tabelle):
+SELECT i.nome AS NomeIngrediente, pi.quantita AS QuantitaNecessaria
+FROM piatto p
+JOIN piatto_ingrediente pi ON p.id_piatto = pi.id_piatto
+JOIN ingrediente i ON pi.id_ingrediente = i.id_ingrediente
+WHERE p.nome = 'Pizza Margherita';
+
+7) ​Ristoranti Aperti nel 2023 (WHERE con funzione di data/anno):
+SELECT nome FROM ristorante WHERE YEAR(data_apertura) = 2023;
+
+8) ​Dipendenti che lavorano in un Ristorante specifico (JOIN):
+SELECT p.nome, p.cognome FROM personale p JOIN ristorante r ON p.id_ristorante = r.id_ristorante WHERE r.nome = 'Ristorante Centrale';
+
+9) ​Scorte basse di un Ingrediente (JOIN e WHERE su Fornitura):
+SELECT r.nome AS NomeRistorante, ri.quantita_disponibile AS QuantitaDisponibile
+FROM ristorante_ingrediente ri
+JOIN ristorante r ON ri.id_ristorante = r.id_ristorante
+JOIN ingrediente i ON ri.id_ingrediente = i.id_ingrediente
+WHERE i.nome = 'Farina Tipo 00'
+  AND ri.quantita_disponibile < 50;
+
+10) ​Conteggio Totale degli Ingredienti:
+SELECT COUNT(*) AS TotaleIngredienti FROM ingrediente;

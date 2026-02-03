@@ -1,0 +1,97 @@
+CREATE DATABASE IF NOT EXISTS catena_ristoranti;
+USE catena_ristoranti;
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+CREATE TABLE ristorante (
+    id_ristorante INT PRIMARY KEY AUTO_INCREMENT,
+    cod_sede VARCHAR(10) UNIQUE,
+    via VARCHAR(255),
+    num_civico VARCHAR(10),
+    nome VARCHAR(255),
+    data_apertura DATE,
+    id_supervisore INT NULL,
+    id_gestore INT NULL
+);
+
+CREATE TABLE personale (
+    id_personale INT PRIMARY KEY AUTO_INCREMENT,
+    cod_dipendente VARCHAR(10) UNIQUE,
+    nome VARCHAR(255),
+    cognome VARCHAR(255),
+    salario DECIMAL(10,2),
+    data_assunzione DATE,
+    id_ristorante INT,
+
+    FOREIGN KEY (id_ristorante) REFERENCES ristorante(id_ristorante)
+);
+
+ALTER TABLE ristorante
+ADD CONSTRAINT fk_supervisore
+FOREIGN KEY (id_supervisore) REFERENCES ristorante(id_ristorante);
+
+ALTER TABLE ristorante
+ADD CONSTRAINT fk_gestore
+FOREIGN KEY (id_gestore) REFERENCES personale(id_personale);
+
+
+CREATE TABLE menu (
+    id_menu INT PRIMARY KEY AUTO_INCREMENT,
+    cod_menu VARCHAR(10) UNIQUE
+);
+
+CREATE TABLE piatto (
+    id_piatto INT PRIMARY KEY AUTO_INCREMENT,
+    cod_piatto VARCHAR(10) UNIQUE,
+    nome VARCHAR(255),
+    prezzo_vendita DECIMAL(10,2),
+    id_menu INT,
+
+    FOREIGN KEY (id_menu) REFERENCES menu(id_menu)
+);
+
+CREATE TABLE ingrediente (
+    id_ingrediente INT PRIMARY KEY AUTO_INCREMENT,
+    cod_ingrediente VARCHAR(10) UNIQUE,
+    nome VARCHAR(255),
+    unita_misura VARCHAR(10),
+    costo_unitario DECIMAL(10,2)
+);
+
+CREATE TABLE piatto_ingrediente (
+    id_piatto INT,
+    id_ingrediente INT,
+    quantita INT,
+
+    PRIMARY KEY (id_piatto, id_ingrediente),
+    FOREIGN KEY (id_piatto) REFERENCES piatto(id_piatto),
+    FOREIGN KEY (id_ingrediente) REFERENCES ingrediente(id_ingrediente)
+);
+
+CREATE TABLE ristorante_ingrediente (
+    id_ristorante INT,
+    id_ingrediente INT,
+    quantita_disponibile INT,
+    data_ultimo_rifornimento DATE,
+
+    PRIMARY KEY (id_ristorante, id_ingrediente),
+    FOREIGN KEY (id_ristorante) REFERENCES ristorante(id_ristorante),
+    FOREIGN KEY (id_ingrediente) REFERENCES ingrediente(id_ingrediente)
+);
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
