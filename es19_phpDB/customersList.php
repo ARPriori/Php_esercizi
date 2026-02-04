@@ -8,19 +8,19 @@ include("./connection.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Costumers List</title>
+    <title>Customers List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
 <body class="text-center">
-    <h1>Costumers List</h1>
+    <h1>Customers List</h1>
 
     <?php
-    $sql = "SELECT customerName as name, CONCAT(contactLastName, ' ', contactFirstName) as contact, phone, addressLine1 as address, city, creditLimit FROM customers";
+    $sql = "SELECT customerNumber, customerName as name, CONCAT(contactLastName, ' ', contactFirstName) as contact, phone, addressLine1 as address, city, creditLimit FROM customers";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
-        echo '<table class="table table-striped table-hover m-auto my-4">
+        echo '<table class="table table-striped table-hover m-auto my-4 w-75">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -33,7 +33,10 @@ include("./connection.php");
                 </thead>
                 <tbody>';
         while ($row = $result->fetch_assoc()) {
-            echo "<tr><td>" . $row["name"] . "</td><td>" . $row["contact"] . "</td><td>" . $row["phone"] . "</td><td>" . $row["address"] . "</td><td>" . $row["city"] . "</td><td>" . $row["creditLimit"] . "</td></tr>";
+            // Nome del cliente che riporta alla pagina con ordini
+            echo "<tr><td><a href='customerOrders.php?customerNumber={$row["customerNumber"]}' class='fw-semibold link-body-emphasis link-offset-2 link-underline-opacity-0'>{$row["name"]}</a></td>";
+            // Informazioni sul cliente
+            echo "<td>" . $row["contact"] . "</td><td>" . $row["phone"] . "</td><td>" . $row["address"] . "</td><td>" . $row["city"] . "</td><td>" . $row["creditLimit"] . "</td></tr>";
         }
         echo "</tbody></table>";
     } else {
