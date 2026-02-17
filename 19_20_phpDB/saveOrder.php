@@ -12,6 +12,7 @@ try {
     $customerName = $_POST["customerName"];
     $productName = $_POST["productName"];
     $quantity = $_POST["quantity"];
+    $priceEach = $_POST['priceEach'];
 
 
     // Info per tabella Orders
@@ -34,11 +35,10 @@ try {
     $quantityOrdered = $quantity;
     $orderLineNumber = rand(1, 20);
 
-    $sql = "SELECT productCode, buyPrice FROM products WHERE productName = '$productName'";
+    $sql = "SELECT productCode FROM products WHERE productName = '$productName'";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
     $productCode = $row['productCode'];
-    $priceEach = $row['buyPrice'];
 
     $sql = "INSERT INTO orderdetails(orderNumber, productCode, quantityOrdered, priceEach, orderLineNumber) VALUES ($orderNumber, '$productCode', $quantityOrdered, $priceEach, $orderLineNumber)";
     if (!$conn->query($sql)) {
@@ -59,10 +59,10 @@ try {
         die("Errore payments: " . $conn->error);
     }
     $conn->commit();
-    header("Location: addOrder.php?success=1");
+    header("Location: index.php?success=1");
 } catch (Exception $e) {
     $conn->rollback();
-    header("Location: addOrder.php?success=0");
+    header("Location: index.php?success=0");
 }
 
 ?>
