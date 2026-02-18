@@ -6,6 +6,12 @@ if (!isset($_POST['customerName'], $_POST['productName'], $_POST['quantity'])) {
     die("Dati mancanti");
 }
 
+// Controllo se l'utente è loggato
+if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
+    header("Location: login.php");
+    exit;
+}
+
 $conn->begin_transaction();
 
 try {
