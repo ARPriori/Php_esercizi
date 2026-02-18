@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("./connection.php");
 ?>
 
@@ -22,65 +23,71 @@ include("./connection.php");
         </div>
 
         <!-- ================= ADD ORDER ================= -->
-        <div class="mb-5 border border-secondary-subtle rounded-3 p-4">
+        <div class="mb-5 border border-secondary-subtle rounded-3 p-4 text-center">
 
-            <h6 class="text-uppercase text-muted mb-3">Add Order</h6>
+            <?php if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']): ?>
+                <!-- Se Utente non Loggato - Visualizzo pulsante per login -->
+                <a href="login.php" class="btn btn-outline-secondary w-50">Login to Add Order</a>
+            <?php else: ?>
+                <!-- Se Utente Loggato - Visualizzo Form Aggiunta Ordine -->
+                <h6 class="text-uppercase text-muted mb-3">Add Order</h6>
 
-            <?php if (isset($_GET['success'])): ?>
-                <?php if ($_GET['success'] == 1): ?>
-                    <div class="alert alert-success py-2">
-                        Order added successfully.
-                    </div>
-                <?php else: ?>
-                    <div class="alert alert-danger py-2">
-                        Error while inserting order.
-                    </div>
+                <?php if (isset($_GET['success'])): ?>
+                    <?php if ($_GET['success'] == 1): ?>
+                        <div class="alert alert-success py-2">
+                            Order added successfully.
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-danger py-2">
+                            Error while inserting order.
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
+
+                <form action="./saveOrder.php" method="POST" class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted">Customer</label>
+                        <select class="form-select" name="customerName" required>
+                            <?php
+                            $result = $conn->query("SELECT customerName FROM customers");
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<option>{$row['customerName']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted">Product</label>
+                        <select class="form-select" name="productName" required>
+                            <?php
+                            $result = $conn->query("SELECT productName FROM products");
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<option>{$row['productName']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small text-muted">Price Each</label>
+                        <input type="number" step="0.01" name="priceEach" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-dark w-100">
+                            Save Order
+                        </button>
+                    </div>
+
+                </form>
             <?php endif; ?>
-
-            <form action="./saveOrder.php" method="POST" class="row g-3">
-
-                <div class="col-md-6">
-                    <label class="form-label small text-muted">Customer</label>
-                    <select class="form-select" name="customerName" required>
-                        <?php
-                        $result = $conn->query("SELECT customerName FROM customers");
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<option>{$row['customerName']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label small text-muted">Product</label>
-                    <select class="form-select" name="productName" required>
-                        <?php
-                        $result = $conn->query("SELECT productName FROM products");
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<option>{$row['productName']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label small text-muted">Quantity</label>
-                    <input type="number" name="quantity" class="form-control" required>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label small text-muted">Price Each</label>
-                    <input type="number" step="0.01" name="priceEach" class="form-control" required>
-                </div>
-
-                <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-dark w-100">
-                        Save Order
-                    </button>
-                </div>
-
-            </form>
         </div>
 
         <!-- ================= CUSTOMERS LIST ================= -->
